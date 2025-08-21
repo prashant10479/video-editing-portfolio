@@ -142,7 +142,7 @@ export default function PortfolioSite() {
           <h2 className="text-2xl sm:text-3xl font-semibold">Let’s work together</h2>
           <p className="mt-2 text-neutral-300">Have a reel or short in mind? I can craft a 60–90s edit in about 2 days. Send the brief and footage, and I’ll take it from there.</p>
           <div className="mt-6 flex flex-wrap gap-3">
-            <a href="mailto:prashantkumar10479.uspc@gmail.com" className="px-4 py-2 rounded-xl bg-white text-neutral-900 font-medium hover:opacity-90">Email Me</a>
+            <a href="mailto:hop359945@gmail.com" className="px-4 py-2 rounded-xl bg-white text-neutral-900 font-medium hover:opacity-90">Email Me</a>
             <a href="#work" className="px-4 py-2 rounded-xl bg-neutral-700 hover:bg-neutral-600">View Work</a>
           </div>
           <p className="mt-4 text-xs text-neutral-400">Replace the email above with your real contact. Add more projects anytime by updating the list in code.</p>
