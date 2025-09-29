@@ -155,9 +155,9 @@ export default function PortfolioSite() {
             <a href="mailto:hop359945@gmail.com" className="px-4 py-2 rounded-xl bg-white text-neutral-900 font-medium hover:opacity-90">Email Me</a>
             <a href="#work" className="px-4 py-2 rounded-xl bg-neutral-700 hover:bg-neutral-600">View Work</a>
           </div>
-          <p className="mt-4 text-xs text-neutral-400">Replace the email above with your real contact. Add more projects anytime by updating the list in code.</p>
+          <p className="mt-4 text-xs text-neutral-400">Contact me on the mail above (via a Outlook)</p>
         </div>
-        <footer className="mt-10 text-xs text-neutral-500">© {new Date().getFullYear()} Prashant Kumar — Video Editor</footer>
+        <footer className="mt-10 text-xs text-neutral-500">© {new Date().getFullYear()} Editor-Boy</footer>
       </section>
     </div>
   );
