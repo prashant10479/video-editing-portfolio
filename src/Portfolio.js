@@ -3,22 +3,32 @@ export default function PortfolioSite() {
     {
       title: "Short Edit 1",
       url: "https://drive.google.com/file/d/1Rhz1DwKC0lX0FQCM3D6YWqAsj95F_Qmd/view?usp=drive_link",
-      tags: ["Reel", "Food/Recipe"],
+      tags: ["Website Promo", "Abt Tech"],
     },
     {
       title: "Short Edit 2",
-      url: "https://drive.google.com/file/d/1jTX5Q8bd0h_sp2ZT0gJc-kxgF9ZZwJ4I/view?usp=drivesdk",
-      tags: ["YouTube Short", "Travel/Lifestyle"],
+      url: "https://drive.google.com/file/d/1vNIivkfUbtC0o7o5VEYMEIgRo8Snrhd9/view?usp=drive_link",
+      tags: ["Brand Promotion", "Clothing"],
     },
     {
       title: "Short Edit 3",
       url: "https://drive.google.com/file/d/1i2GRFasKGmJHcII7rsBANwKqxlwNJs7b/view?usp=drivesdk",
-      tags: ["Product", "Promo"],
+      tags: ["Game", "Velocity edit"],
     },
     {
       title: "Short Edit 4",
       url: "https://drive.google.com/file/d/1i-QOydjHq_KXMMR1M2M2qrYHV2D14Y_N/view?usp=drivesdk",
       tags: ["Aesthetic", "Montage"],
+    },
+    {
+      title: "Short Edit 5",
+      url: "https://drive.google.com/file/d/1vA4ooftkWSfbhZZ3dVs1-N9F-x2QORID/view?usp=drive_link",
+      tags: ["Aesthetic", "Cinematic"],
+    },
+    {
+      title: "Short Edit 6",
+      url: "https://drive.google.com/file/d/1M2t2gDq_s7qmqYvwYGJJhC5v0bR60Nu_/view?usp=drive_link",
+      tags: ["Divine", "Religious"],
     },
   ];
 
