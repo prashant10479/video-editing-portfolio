@@ -30,6 +30,11 @@ export default function PortfolioSite() {
       url: "https://drive.google.com/file/d/1M2t2gDq_s7qmqYvwYGJJhC5v0bR60Nu_/view?usp=drive_link",
       tags: ["Divine", "Religious"],
     },
+    {
+      title: "Short Edit 7",
+      url: "https://drive.google.com/file/d/1OTV5O2eB8IowCj6bW-Xc7SHx6LbxjWYO/view?usp=drive_link",
+      tags: ["Perplexity", "Ad/Promotion"],
+    },
   ];
 
   const toPreview = (url) => {
