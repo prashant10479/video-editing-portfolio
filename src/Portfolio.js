@@ -124,7 +124,7 @@ function InfiniteMarquee({ items, direction = "left", speed = "30s" }) {
 /* ── Main Portfolio Site ── */
 export default function PortfolioSite() {
   const { scrollY } = useScroll();
-  const [scrollProgress, setScrollProgress] = useState(0);
+  //const [scrollProgress, setScrollProgress] = useState(0);//
   const [navSolid, setNavSolid] = useState(false);
 
   // Track scroll for background blur
