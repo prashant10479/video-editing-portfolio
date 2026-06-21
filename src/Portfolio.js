@@ -129,7 +129,7 @@ export default function PortfolioSite() {
 
   // Track scroll for background blur
   useMotionValueEvent(scrollY, "change", (latest) => {
-    setScrollProgress(Math.min(latest / 800, 1));
+    // setScrollProgress(Math.min(latest / 800, 1));
     setNavSolid(latest > 100);
   });
 
