@@ -478,22 +478,33 @@ export default function PortfolioSite() {
               className="group relative aspect-[4/5] overflow-hidden cursor-pointer border border-white/[0.04] hover:border-yellow-400/40 transition-all duration-500 hover:-translate-y-2"
               onClick={() => window.open(p.url, '_blank')}
             >
-              {/* Video preview as thumbnail */}
-              <div className="absolute inset-0 bg-[#0a0a0a] overflow-hidden">
-                {/* Fallback gradient for videos that can't be previewed */}
-                <div className="absolute inset-0 bg-gradient-to-br from-[#1a1a1a] via-[#111] to-[#0a0a0a] flex items-center justify-center">
-                  <div className="text-[8rem] font-black text-white/[0.04] leading-none select-none">{p.num}</div>
-                </div>
-                <iframe
-                  src={toPreview(p.url)}
-                  title={p.title}
-                  className="absolute inset-0 w-full h-full pointer-events-none opacity-80 group-hover:opacity-100 transition-opacity duration-500"
-                  loading="lazy"
-                  allow="autoplay"
-                  style={{ border: "none" }}
+              {/* Premium styled card background */}
+              <div className="absolute inset-0 overflow-hidden">
+                {/* Unique gradient per card */}
+                <div 
+                  className="absolute inset-0 opacity-90 group-hover:opacity-100 transition-opacity duration-500"
+                  style={{
+                    background: `linear-gradient(135deg, 
+                      hsl(${(idx * 25 + 220) % 360}, 30%, 8%) 0%, 
+                      hsl(${(idx * 25 + 240) % 360}, 25%, 5%) 50%, 
+                      #050505 100%)`
+                  }}
                 />
-                {/* Scale overlay on hover */}
-                <div className="absolute inset-0 group-hover:scale-105 transition-transform duration-700 pointer-events-none" />
+                {/* Subtle pattern overlay */}
+                <div className="absolute inset-0 opacity-[0.03]" style={{
+                  backgroundImage: "repeating-linear-gradient(0deg, transparent, transparent 30px, rgba(255,255,255,0.05) 30px, rgba(255,255,255,0.05) 31px)",
+                }} />
+                {/* Large watermark number */}
+                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-[10rem] sm:text-[12rem] font-black text-white/[0.025] leading-none select-none pointer-events-none">
+                  {p.num}
+                </div>
+                {/* Decorative film-strip lines */}
+                <div className="absolute top-4 left-4 right-4 flex justify-between pointer-events-none">
+                  <div className="w-6 h-[2px] bg-yellow-400/20" />
+                  <div className="w-6 h-[2px] bg-yellow-400/20" />
+                </div>
+                {/* Hover glow */}
+                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-32 h-32 bg-yellow-400/0 group-hover:bg-yellow-400/10 blur-[60px] rounded-full transition-all duration-700 pointer-events-none" />
               </div>
 
               {/* Large project number watermark */}
