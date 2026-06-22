@@ -155,6 +155,7 @@ function VideoModal({ video, onClose }) {
         {/* Video iframe */}
         <iframe
           id="modal-video-frame"
+          title={video.title}
           src={video.url}
           width="100%"
           height="100%"
@@ -615,6 +616,7 @@ export default function PortfolioSite() {
                 <>
                   {/* Video iframe */}
                   <iframe
+                    title={p.title}
                     src={p.url}
                     width="100%"
                     height="100%"
