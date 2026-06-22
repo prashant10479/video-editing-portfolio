@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { motion, useScroll, useTransform, useMotionValueEvent } from "framer-motion";
-import { Play, ChevronDown, Mail, Video, Edit3, Music, TrendingUp, MonitorPlay, Sparkles, ArrowRight } from "lucide-react";
+import { Play, ChevronDown, Mail, Video, Edit3, Music, TrendingUp, MonitorPlay, Sparkles, ArrowRight, X, Maximize } from "lucide-react";
 import animeBoyImage from "./anime_boy.png";
 
 /* ── Floating Particles Component ── */
@@ -98,6 +98,75 @@ function WordReveal({ text, className, delay = 0 }) {
   );
 }
 
+/* ── Video Modal Component ── */
+function VideoModal({ video, onClose }) {
+  const [isFullscreen, setIsFullscreen] = useState(false);
+
+  const toggleFullscreen = () => {
+    const elem = document.getElementById("modal-video-frame");
+    if (!isFullscreen) {
+      if (elem.requestFullscreen) {
+        elem.requestFullscreen();
+      } else if (elem.webkitRequestFullscreen) {
+        elem.webkitRequestFullscreen();
+      }
+      setIsFullscreen(true);
+    } else {
+      if (document.fullscreenElement) {
+        document.exitFullscreen();
+      } else if (document.webkitFullscreenElement) {
+        document.webkitExitFullscreen();
+      }
+      setIsFullscreen(false);
+    }
+  };
+
+  return (
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      onClick={onClose}
+      className="fixed inset-0 z-[100] flex items-center justify-center bg-black/95 backdrop-blur-lg p-4"
+    >
+      <motion.div
+        initial={{ scale: 0.8, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1 }}
+        exit={{ scale: 0.8, opacity: 0 }}
+        onClick={(e) => e.stopPropagation()}
+        className="w-full h-full max-w-6xl max-h-[90vh] relative rounded-lg overflow-hidden shadow-2xl border border-white/10"
+      >
+        {/* Close button */}
+        <button
+          onClick={onClose}
+          className="absolute top-3 right-16 z-20 w-10 h-10 rounded-full bg-black/60 hover:bg-black/80 border border-white/20 flex items-center justify-center text-white transition-all duration-300"
+        >
+          <X size={20} />
+        </button>
+
+        {/* Fullscreen button */}
+        <button
+          onClick={toggleFullscreen}
+          className="absolute top-3 left-4 z-20 w-10 h-10 rounded-full bg-black/60 hover:bg-black/80 border border-white/20 flex items-center justify-center text-white transition-all duration-300"
+        >
+          <Maximize size={18} />
+        </button>
+
+        {/* Video iframe */}
+        <iframe
+          id="modal-video-frame"
+          src={video.url}
+          width="100%"
+          height="100%"
+          allow="autoplay"
+          className="w-full h-full"
+          allowFullScreen
+        />
+      </motion.div>
+    </motion.div>
+  );
+}
+
 /* ── Horizontal Marquee ── */
 function InfiniteMarquee({ items, direction = "left", speed = "30s" }) {
   const doubled = [...items, ...items];
@@ -124,8 +193,9 @@ function InfiniteMarquee({ items, direction = "left", speed = "30s" }) {
 /* ── Main Portfolio Site ── */
 export default function PortfolioSite() {
   const { scrollY } = useScroll();
-  //const [scrollProgress, setScrollProgress] = useState(0);//
   const [navSolid, setNavSolid] = useState(false);
+  const [selectedVideo, setSelectedVideo] = useState(null);
+  const [playingVideoIndex, setPlayingVideoIndex] = useState(null);
 
   // Track scroll for background blur
   useMotionValueEvent(scrollY, "change", (latest) => {
@@ -196,7 +266,8 @@ export default function PortfolioSite() {
   return (
     <div className="min-h-screen bg-[#050505] text-neutral-100 font-sans overflow-x-hidden noise-overlay vignette">
 
-      {/* ═══ FLOATING PARTICLES ═══ */}
+      {/* ═══ VIDEO MODAL ═══ */}
+      {selectedVideo && <VideoModal video={selectedVideo} onClose={() => setSelectedVideo(null)} />}
       <FloatingParticles />
 
       {/* ═══ APPLE-STYLE GRADIENT GLASS BACKGROUND ═══ */}
@@ -475,69 +546,128 @@ export default function PortfolioSite() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-40px" }}
               transition={{ delay: (idx % 3) * 0.1, duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-              className="group relative aspect-[4/5] overflow-hidden cursor-pointer border border-white/[0.04] hover:border-yellow-400/40 transition-all duration-500 hover:-translate-y-2"
-              onClick={() => window.open(p.url, '_blank')}
+              className="group relative aspect-[4/5] overflow-hidden border border-white/[0.04] hover:border-yellow-400/40 transition-all duration-500 hover:-translate-y-2"
             >
-              {/* Premium styled card background */}
-              <div className="absolute inset-0 overflow-hidden">
-                {/* Unique gradient per card */}
-                <div 
-                  className="absolute inset-0 opacity-90 group-hover:opacity-100 transition-opacity duration-500"
-                  style={{
-                    background: `linear-gradient(135deg, 
-                      hsl(${(idx * 25 + 220) % 360}, 30%, 8%) 0%, 
-                      hsl(${(idx * 25 + 240) % 360}, 25%, 5%) 50%, 
-                      #050505 100%)`
-                  }}
-                />
-                {/* Subtle pattern overlay */}
-                <div className="absolute inset-0 opacity-[0.03]" style={{
-                  backgroundImage: "repeating-linear-gradient(0deg, transparent, transparent 30px, rgba(255,255,255,0.05) 30px, rgba(255,255,255,0.05) 31px)",
-                }} />
-                {/* Large watermark number */}
-                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-[10rem] sm:text-[12rem] font-black text-white/[0.025] leading-none select-none pointer-events-none">
-                  {p.num}
-                </div>
+              {/* Premium styled card background with video thumbnail */}
+              <div className="absolute inset-0 overflow-hidden bg-black">
+                {/* Get file ID and display thumbnail */}
+                {(() => {
+                  const fileId = getFileId(p.url);
+                  return fileId ? (
+                    <img 
+                      src={`https://drive.google.com/thumbnail?id=${fileId}&sz=w600`}
+                      alt={p.title}
+                      className="w-full h-full object-cover"
+                    />
+                  ) : (
+                    <div className="w-full h-full bg-gradient-to-br from-gray-800 to-black" />
+                  );
+                })()}
+                
+                {/* Overlay gradient for depth */}
+                <div className="absolute inset-0 bg-gradient-to-b from-black/0 via-transparent to-black/60" />
+                
                 {/* Decorative film-strip lines */}
                 <div className="absolute top-4 left-4 right-4 flex justify-between pointer-events-none">
-                  <div className="w-6 h-[2px] bg-yellow-400/20" />
-                  <div className="w-6 h-[2px] bg-yellow-400/20" />
+                  <div className="w-6 h-[2px] bg-yellow-400/40" />
+                  <div className="w-6 h-[2px] bg-yellow-400/40" />
                 </div>
-                {/* Hover glow */}
-                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-32 h-32 bg-yellow-400/0 group-hover:bg-yellow-400/10 blur-[60px] rounded-full transition-all duration-700 pointer-events-none" />
+                
+                {/* Center play icon indicator */}
+                {playingVideoIndex !== idx && (
+                  <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                    <div className="w-16 h-16 rounded-full bg-white/20 backdrop-blur-sm border-2 border-white/40 flex items-center justify-center group-hover:bg-yellow-400/30 group-hover:border-yellow-400/70 transition-all duration-500 shadow-lg">
+                      <Play size={24} fill="white" className="text-white ml-1 opacity-80 group-hover:opacity-100 transition-opacity" />
+                    </div>
+                  </div>
+                )}
+                
+                {/* Hover glow effect */}
+                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-40 h-40 bg-yellow-400/0 group-hover:bg-yellow-400/15 blur-[80px] rounded-full transition-all duration-700 pointer-events-none" />
               </div>
 
               {/* Large project number watermark */}
-              <div className="absolute top-6 right-6 text-[5rem] sm:text-[6rem] font-black text-white/[0.03] leading-none pointer-events-none">
+              <div className="absolute top-6 right-6 text-[5rem] sm:text-[6rem] font-black text-white/[0.06] leading-none pointer-events-none">
                 {p.num}
               </div>
 
-              {/* Center play button */}
-              <div className="absolute inset-0 flex items-center justify-center z-10">
-                <div className="w-16 h-16 rounded-full bg-yellow-400/0 border-2 border-white/10 group-hover:border-yellow-400 group-hover:bg-yellow-400 text-white/40 group-hover:text-black flex items-center justify-center transform scale-90 group-hover:scale-100 transition-all duration-500 group-hover:shadow-[0_0_40px_rgba(250,204,21,0.3)]">
-                  <Play size={20} fill="currentColor" className="ml-0.5" />
-                </div>
-              </div>
+              {/* Show play button only when video is not playing */}
+              {playingVideoIndex !== idx && (
+                <>
+                  {/* Center play button */}
+                  <div className="absolute inset-0 flex items-center justify-center z-10 opacity-0 group-hover:opacity-100 transition-all duration-500">
+                    <button
+                      onClick={() => setPlayingVideoIndex(idx)}
+                      className="w-16 h-16 rounded-full bg-yellow-400 text-black flex items-center justify-center transform hover:scale-110 transition-all duration-500 hover:bg-yellow-300 shadow-[0_0_40px_rgba(250,204,21,0.5)] hover:shadow-[0_0_60px_rgba(250,204,21,0.7)]"
+                      title="Play video"
+                    >
+                      <Play size={24} fill="currentColor" className="ml-1" />
+                    </button>
+                  </div>
 
-              {/* Hover overlay */}
-              <div className="absolute inset-0 bg-black/0 group-hover:bg-black/30 backdrop-blur-0 group-hover:backdrop-blur-[2px] transition-all duration-500 pointer-events-none" />
+                  {/* Hover overlay */}
+                  <div className="absolute inset-0 bg-black/0 group-hover:bg-black/40 backdrop-blur-0 group-hover:backdrop-blur-[1px] transition-all duration-500 pointer-events-none" />
+                </>
+              )}
+
+              {/* Show video iframe when playing */}
+              {playingVideoIndex === idx && !selectedVideo && (
+                <>
+                  {/* Video iframe */}
+                  <iframe
+                    src={p.url}
+                    width="100%"
+                    height="100%"
+                    allow="autoplay; fullscreen"
+                    className="w-full h-full absolute inset-0"
+                    allowFullScreen
+                    autoPlay
+                  />
+
+                  {/* Fullscreen button at top right */}
+                  <button
+                    onClick={() => {
+                      setSelectedVideo(p);
+                      setPlayingVideoIndex(null);
+                    }}
+                    className="absolute top-3 right-20 z-20 w-12 h-12 rounded-full bg-yellow-400 text-black flex items-center justify-center hover:bg-yellow-300 transition-all duration-300 hover:scale-110 shadow-[0_0_30px_rgba(250,204,21,0.5)]"
+                    title="Fullscreen"
+                  >
+                    <Maximize size={20} />
+                  </button>
+
+                  {/* Close/Stop button at top left */}
+                  <button
+                    onClick={() => setPlayingVideoIndex(null)}
+                    className="absolute top-3 left-4 z-20 w-12 h-12 rounded-full bg-white/20 backdrop-blur-md border-2 border-white/40 text-white flex items-center justify-center hover:bg-white/30 hover:border-red-400 hover:text-red-400 transition-all duration-300 hover:scale-110"
+                    title="Close"
+                  >
+                    <X size={20} />
+                  </button>
+
+                  {/* Dark overlay */}
+                  <div className="absolute inset-0 bg-black/10 pointer-events-none" />
+                </>
+              )}
 
               {/* Bottom gradient with info */}
-              <div className="absolute inset-x-0 bottom-0 p-6 sm:p-7 flex flex-col justify-end h-2/5 bg-gradient-to-t from-black/90 via-black/50 to-transparent">
-                <h3 className="text-lg sm:text-xl font-bold text-white mb-3 group-hover:text-yellow-400 transition-colors duration-300 uppercase tracking-tight">
-                  {p.title}
-                </h3>
-                <div className="flex flex-wrap gap-2">
-                  {p.tags.map((t) => (
-                    <span
-                      key={t}
-                      className="text-[9px] font-bold text-black bg-yellow-400 px-2 py-0.5 uppercase tracking-wider"
-                    >
-                      {t}
-                    </span>
-                  ))}
+              {playingVideoIndex !== idx && (
+                <div className="absolute inset-x-0 bottom-0 p-6 sm:p-7 flex flex-col justify-end h-2/5 bg-gradient-to-t from-black/95 via-black/70 to-transparent">
+                  <h3 className="text-lg sm:text-xl font-bold text-white mb-3 group-hover:text-yellow-400 transition-colors duration-300 uppercase tracking-tight">
+                    {p.title}
+                  </h3>
+                  <div className="flex flex-wrap gap-2">
+                    {p.tags.map((t) => (
+                      <span
+                        key={t}
+                        className="text-[9px] font-bold text-black bg-yellow-400 px-2 py-0.5 uppercase tracking-wider"
+                      >
+                        {t}
+                      </span>
+                    ))}
+                  </div>
                 </div>
-              </div>
+              )}
 
               {/* Top left corner accent */}
               <div className="absolute top-0 left-0 w-8 h-8 border-t-2 border-l-2 border-yellow-400/0 group-hover:border-yellow-400/60 transition-all duration-500 pointer-events-none" />
