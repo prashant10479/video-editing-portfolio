@@ -249,11 +249,6 @@ export default function PortfolioSite() {
     return match ? match[1] : null;
   };
 
-  const toPreview = (url) => {
-    const id = getFileId(url);
-    return id ? `https://drive.google.com/file/d/${id}/preview` : url;
-  };
-
   // Stagger container for Framer Motion
   const staggerContainer = {
     hidden: { opacity: 0 },
